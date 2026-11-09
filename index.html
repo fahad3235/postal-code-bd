@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postal Code BD — Bangladesh Postcode Finder</title>
+<meta name="description" content="Find the 4-digit postcode of any post office in Bangladesh — district head offices and Dhaka city areas. Offline, bilingual English/বাংলা.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">✉️</span>
+      <div>
+        <h1 id="appTitle">Postal Code BD</h1>
+        <p id="appSubtitle" class="subtitle">Find the 4-digit postcode of any post office in Bangladesh — district head offices and Dhaka city areas, offline.</p>
+      </div>
+    </div>
+    <button id="langToggle" class="lang-btn" type="button" aria-label="Switch language">বাংলা</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel search-panel" aria-label="Search">
+    <label class="field-label" for="searchInput" id="searchLabel">Search by place, district or code</label>
+    <input id="searchInput" type="search" placeholder="e.g. Gulshan, Khulna, 1207, গুলশান…" autocomplete="off">
+    <div class="chips" id="divisionChips" role="group" aria-label="Division filter"></div>
+    <div class="filter-row">
+      <label class="kind-wrap">
+        <span id="kindLabel" class="sr-only">Type</span>
+        <select id="kindSelect" aria-label="Type filter"></select>
+      </label>
+      <label class="fav-toggle"><input type="checkbox" id="favOnly"> <span id="favOnlyLabel">Favourites only</span></label>
+      <span class="count" id="resultCount" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="panel lookup-panel" aria-label="Reverse lookup">
+    <label class="field-label" for="lookupInput" id="lookupLabel">Reverse lookup — type a code</label>
+    <div class="lookup-row">
+      <input id="lookupInput" type="text" inputmode="numeric" maxlength="4" placeholder="e.g. 1207" autocomplete="off">
+      <button id="lookupBtn" class="btn primary" type="button">Find</button>
+    </div>
+    <p id="lookupError" class="error" role="alert" hidden></p>
+    <div id="lookupResult" class="lookup-result" hidden></div>
+  </section>
+
+  <section aria-label="Results">
+    <div id="cards" class="cards"></div>
+    <div id="emptyState" class="empty" hidden>
+      <p id="emptyTitle">No post office matches that search.</p>
+      <p id="emptyHint" class="muted">Try a district name (e.g. Sylhet), a place (e.g. Uttara) or a 4-digit code.</p>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Postcode ranges">
+    <h2 id="rangesTitle">Postcode ranges by district</h2>
+    <p id="rangesIntro" class="muted">Each district owns a block of codes. These ranges are confirmed by Wikipedia’s list of postal codes in Bangladesh — a code inside a range belongs to that district’s post offices.</p>
+    <div class="table-wrap">
+      <table id="rangesTable">
+        <thead><tr><th id="thRange">Code range</th><th id="thDistrict">District</th><th id="thDivision">Division</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="About">
+    <h2 id="aboutTitle">About Bangladesh postcodes</h2>
+    <ul class="about-list">
+      <li id="about1">Bangladesh uses a 4-digit postcode system, introduced on 22 December 1986.</li>
+      <li id="about2">There are five General Post Offices: Dhaka GPO (1000), Metropolitan Dhaka (1100), Chattogram GPO (4000), Rajshahi GPO (6000) and Khulna GPO (9000).</li>
+      <li id="about3">This app lists district head offices plus Dhaka city area post offices — 91 entries. It is a reference subset, not the full national list of post offices.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-label="Your data">
+    <h2 id="dataTitle">Your data</h2>
+    <div class="data-row">
+      <button id="exportBtn" class="btn" type="button">Export favourites (JSON)</button>
+      <button id="importBtn" class="btn" type="button">Import favourites</button>
+      <input id="importFile" type="file" accept="application/json,.json" hidden>
+      <button id="eraseBtn" class="btn danger" type="button">Erase all favourites</button>
+    </div>
+    <p id="dataMsg" class="muted" role="status"></p>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <p id="footerNote">Reference only — verify a postcode with Bangladesh Post before using it on an official form or parcel. Works fully offline; nothing leaves your device.</p>
+  <p id="sourcesNote" class="muted small">Sources: bdtradeinfo.com post-code list (2026-11-09), mediabangladesh.net (Bangladesh Post records), Wikipedia — List of postal codes in Bangladesh.</p>
+</footer>
+
+<div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <div class="modal-card">
+    <button id="modalClose" class="modal-close" type="button" aria-label="Close">✕</button>
+    <p id="modalKind" class="modal-kind"></p>
+    <h2 id="modalName"></h2>
+    <p id="modalBn" class="modal-bn"></p>
+    <p class="modal-code"><span id="modalCode"></span></p>
+    <dl class="modal-meta">
+      <div><dt id="modalDistrictLabel">District</dt><dd id="modalDistrict"></dd></div>
+      <div><dt id="modalDivisionLabel">Division</dt><dd id="modalDivision"></dd></div>
+      <div><dt id="modalTypeLabel">Type</dt><dd id="modalType"></dd></div>
+    </dl>
+    <div class="modal-actions">
+      <button id="modalCopy" class="btn primary" type="button">Copy code</button>
+      <button id="modalFav" class="btn" type="button">☆ Favourite</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="data.js"></script>
+<script src="logic.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
